@@ -4,13 +4,8 @@ import {Component} from 'react'
 
 class NavBar extends Component {
   render() {
-    let {score, total} = this.props
-    if (score !== 0) {
-      score -= 1
-    }
-    if (total !== 0) {
-      total -= 1
-    }
+    const {score, total} = this.props
+
     return (
       <nav className="nav-container">
         <div className="navbar-heading">

@@ -11,6 +11,7 @@ import NavBar from '../NavBar'
 import EmojiCard from '../EmojiCard'
 import WinOrLoseCard from '../WinOrLoseCard'
 
+let emojisContainerResult
 const shuffledEmojisList = list => {
   console.log('list=', list)
   return list.sort(() => Math.random() - 0.5)
@@ -18,7 +19,14 @@ const shuffledEmojisList = list => {
 let gameResult
 
 class EmojiGame extends Component {
-  state = {ListOfEmojis: this.props, idsList: [], score: 0, total: 0}
+  state = {
+    ListOfEmojis: this.props,
+    idsList: [],
+    score: 0,
+    total: 0,
+    isWin: false,
+    toDisplay: false,
+  }
 
   onClickPlayAgainBtn = () => {
     console.log('Play again is clicked')
@@ -34,8 +42,10 @@ class EmojiGame extends Component {
       idsList: [],
       score: 0,
       total: score,
+      toDisplay: false,
     })
     gameResult = ''
+    emojisContainerResult = ''
   }
 
   onClickEmojiFunction = id => {
@@ -44,54 +54,80 @@ class EmojiGame extends Component {
     console.log(isIdExist)
     const {emojisList} = ListOfEmojis
     const givenListLength = emojisList.length
+    const lengthOfIdsList = idsList.length
     if (isIdExist === false) {
       console.log('inside function', emojisList)
 
-      this.setState({
-        emojisList: shuffledEmojisList(emojisList),
-        idsList: [...idsList, id],
-        score: score + 1,
-      })
-    } else {
-      const lengthOfIdsList = idsList.length
-      if (lengthOfIdsList === givenListLength) {
+      if (lengthOfIdsList === givenListLength - 1) {
+        this.setState({
+          ListOfEmojis,
+          idsList: [...idsList, id],
+          score: score + 1,
+          isWin: true,
+          toDisplay: true,
+        })
+
         gameResult = (
           <WinOrLoseCard
             result="win"
             onClickPlayAgainBtn={this.onClickPlayAgainBtn}
-            score={score}
+            score={score + 1}
           />
         )
       } else {
-        gameResult = (
-          <WinOrLoseCard
-            result="loss"
-            onClickPlayAgainBtn={this.onClickPlayAgainBtn}
-            score={score}
-          />
-        )
+        this.setState({
+          emojisList: shuffledEmojisList(emojisList),
+          idsList: [...idsList, id],
+          score: score + 1,
+          isWin: false,
+          toDisplay: false,
+        })
       }
+    } else {
+      this.setState({
+        emojisList,
+        isWin: false,
+        toDisplay: true,
+      })
+      gameResult = (
+        <WinOrLoseCard
+          result="loss"
+          onClickPlayAgainBtn={this.onClickPlayAgainBtn}
+          score={score}
+        />
+      )
+      emojisContainerResult = ''
     }
   }
 
   render() {
-    const {ListOfEmojis, idsList, score, total} = this.state
+    const {ListOfEmojis, idsList, score, total, isWin, toDisplay} = this.state
     const {emojisList} = ListOfEmojis
+    console.log('Is win =', isWin)
     console.log('idslist = ', idsList)
+
+    if (toDisplay === false) {
+      console.log('len = 12 and win')
+      emojisContainerResult = (
+        <ul className="emojis-container">
+          {emojisList.map(each => (
+            <EmojiCard
+              emoji={each}
+              key={each.id}
+              onClickEmojiFunction={this.onClickEmojiFunction}
+            />
+          ))}
+        </ul>
+      )
+    } else {
+      emojisContainerResult = ''
+    }
 
     return (
       <>
         <NavBar score={score} total={total} />
         <div className="emoji-game-container">
-          <ul className="emojis-container">
-            {emojisList.map(each => (
-              <EmojiCard
-                emoji={each}
-                key={each.id}
-                onClickEmojiFunction={this.onClickEmojiFunction}
-              />
-            ))}
-          </ul>
+          {emojisContainerResult}
           {gameResult}
         </div>
       </>
