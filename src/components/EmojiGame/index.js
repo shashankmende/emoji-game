@@ -9,32 +9,79 @@ import {Component} from 'react'
 import './index.css'
 import NavBar from '../NavBar'
 import EmojiCard from '../EmojiCard'
+import WinOrLoseCard from '../WinOrLoseCard'
 
 const shuffledEmojisList = list => {
   console.log('list=', list)
   return list.sort(() => Math.random() - 0.5)
 }
+let gameResult
 
 class EmojiGame extends Component {
-  state = {ListOfEmojis: this.props}
+  state = {ListOfEmojis: this.props, idsList: [], score: 0, total: 0}
 
-  onClickEmojiFunction = () => {
-    const {ListOfEmojis} = this.state
-    const {emojisList} = ListOfEmojis
-    console.log('inside function', emojisList)
+  onClickPlayAgainBtn = () => {
+    console.log('Play again is clicked')
+    const {ListOfEmojis, score} = this.state
+    let {total} = this.state
+
+    if (score > total) {
+      total = score
+    }
+
     this.setState({
-      emojisList: shuffledEmojisList(emojisList),
+      ListOfEmojis,
+      idsList: [],
+      score: 0,
+      total: score,
     })
+    gameResult = ''
+  }
+
+  onClickEmojiFunction = id => {
+    const {ListOfEmojis, idsList, score} = this.state
+    const isIdExist = idsList.includes(id)
+    console.log(isIdExist)
+    const {emojisList} = ListOfEmojis
+    const givenListLength = emojisList.length
+    if (isIdExist === false) {
+      console.log('inside function', emojisList)
+
+      this.setState({
+        emojisList: shuffledEmojisList(emojisList),
+        idsList: [...idsList, id],
+        score: score + 1,
+      })
+    } else {
+      const lengthOfIdsList = idsList.length
+      if (lengthOfIdsList === givenListLength) {
+        gameResult = (
+          <WinOrLoseCard
+            result="win"
+            onClickPlayAgainBtn={this.onClickPlayAgainBtn}
+            score={score}
+          />
+        )
+      } else {
+        gameResult = (
+          <WinOrLoseCard
+            result="loss"
+            onClickPlayAgainBtn={this.onClickPlayAgainBtn}
+            score={score}
+          />
+        )
+      }
+    }
   }
 
   render() {
-    const {ListOfEmojis} = this.state
+    const {ListOfEmojis, idsList, score, total} = this.state
     const {emojisList} = ListOfEmojis
-    console.log('Emojis list', ListOfEmojis)
-    console.log('actaul list', emojisList)
+    console.log('idslist = ', idsList)
+
     return (
       <>
-        <NavBar />
+        <NavBar score={score} total={total} />
         <div className="emoji-game-container">
           <ul className="emojis-container">
             {emojisList.map(each => (
@@ -45,6 +92,7 @@ class EmojiGame extends Component {
               />
             ))}
           </ul>
+          {gameResult}
         </div>
       </>
     )

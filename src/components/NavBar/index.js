@@ -4,6 +4,13 @@ import {Component} from 'react'
 
 class NavBar extends Component {
   render() {
+    let {score, total} = this.props
+    if (score !== 0) {
+      score -= 1
+    }
+    if (total !== 0) {
+      total -= 1
+    }
     return (
       <nav className="nav-container">
         <div className="navbar-heading">
@@ -15,8 +22,8 @@ class NavBar extends Component {
             <h1>Emoji Game</h1>
           </div>
           <div className="scores-container">
-            <p>Score: 0</p>
-            <p>Top Score: 0</p>
+            <p>Score: {score}</p>
+            <p>Top Score: {total}</p>
           </div>
         </div>
       </nav>
