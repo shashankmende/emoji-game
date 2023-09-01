@@ -1,0 +1,20 @@
+/* Write your code here. */
+.list-item {
+  background-color: #ffffff33;
+  border-radius: 10px;
+  padding: 20px;
+  list-style-type: none;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 200px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+.button {
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  outline: none;
+}
