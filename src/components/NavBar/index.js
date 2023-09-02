@@ -4,7 +4,7 @@ import {Component} from 'react'
 
 class NavBar extends Component {
   render() {
-    const {score, total} = this.props
+    const {score, total, isWin} = this.props
 
     return (
       <nav className="nav-container">
@@ -16,10 +16,12 @@ class NavBar extends Component {
             />
             <h1>Emoji Game</h1>
           </div>
-          <div className="scores-container">
-            <p>Score: {score}</p>
-            <p>Top Score: {total}</p>
-          </div>
+          {!isWin && (
+            <div className="scores-container">
+              <p>Score: {score}</p>
+              <p>Top Score: {total}</p>
+            </div>
+          )}
         </div>
       </nav>
     )

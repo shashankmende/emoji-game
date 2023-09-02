@@ -42,6 +42,7 @@ class EmojiGame extends Component {
       idsList: [],
       score: 0,
       total: score,
+      isWin: false,
       toDisplay: false,
     })
     gameResult = ''
@@ -86,7 +87,7 @@ class EmojiGame extends Component {
     } else {
       this.setState({
         emojisList,
-        isWin: false,
+        isWin: true,
         toDisplay: true,
       })
       gameResult = (
@@ -125,7 +126,7 @@ class EmojiGame extends Component {
 
     return (
       <>
-        <NavBar score={score} total={total} />
+        <NavBar score={score} total={total} isWin={isWin} />
         <div className="emoji-game-container">
           {emojisContainerResult}
           {gameResult}
